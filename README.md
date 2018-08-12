@@ -1,1 +1,1 @@
-# CI_Blog
+# codeigniter php blog
