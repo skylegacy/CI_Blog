@@ -52,11 +52,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = '';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-
+// $route['(:any)'] = "Guest/index";
 
 
 $config['acl']['guest'] = array(
-    'Guest'=>array('func1','func2'),
+    'Guest'=>array('index','demo'),
     'LogCheck'=>array('login'),
     'Users'=>array('ajaxValid')
 );
@@ -74,7 +74,10 @@ $config['acl']['users'] = array(
     	'Create','Update','CreateItem','UpdateItem','DeleItem'),
     'Article'=>array(
     	'showList',
-    	'Create','Update','CreateItem','UpdateItem','DeleItem')
+    	'Create','Update','CreateItem','UpdateItem','DeleItem'),
+    'Category'=>array(
+    	'cateList','ajax_RebuildTree','ajax_CreateItem','ajax_DeleItem','ajax_UpdateItem'
+    	)
 );
 
 $config['acl']['admin'] = array(
@@ -85,11 +88,14 @@ $config['acl']['admin'] = array(
         ),
     'LogCheck'=>array('logout'),
     'Tag'=>array(
-    	'tagList',
+    	'tagList','ajax_RebuildTree',
     	'Create','Update','CreateItem','UpdateItem','DeleItem'),
     'Article'=>array(
     	'showList',
-    	'Create','Update','CreateItem','UpdateItem','DeleItem')
+    	'Create','Update','CreateItem','UpdateItem','DeleItem'),
+    'Category'=>array(
+    	'cateList','ajax_RebuildTree','ajax_CreateItem','ajax_DeleItem','ajax_UpdateItem'
+    	)
 );
 
 
@@ -153,6 +159,15 @@ $config['BackCrumb']=array(
     '25'=>array('id'=>25,'funcword'=>'Create','funcname'=>'標籤新增',
        'parsent'=>'1,22',
        'path'=>'1,22,25'
+     ),
+     
+     '30'=>array('id'=>30,'funcword'=>'Category','funcname'=>'類別模組',
+       'parsent'=>'1',
+       'path'=>'1,30'
+     ),
+     '31'=>array('id'=>31,'funcword'=>'cateList','funcname'=>'類別列表',
+       'parsent'=>'1,30',
+       'path'=>'1,30,31'
      )
     
 );

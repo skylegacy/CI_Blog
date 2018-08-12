@@ -15,3 +15,47 @@
 span.ui.header {
     font-family: 'Segoe UI','微軟正黑體',sans-serif;
 }
+
+body {
+            background-color: #DADADA;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 350px;
+        }
+        .top_banner{
+           height:180px;
+           /*background: #99CCFF;*/
+           background: #99CCFF url('http://61.58.100.163/asserts/img/sunset.jpg') no-repeat fixed bottom center;
+           background-size:auto;
+        }
+        .breadRow{
+            padding-top: 10px;
+            padding-left:  5px;
+            padding-bottom:  10px;
+            background: #fff;
+        }
+        .navWrap{
+            margin-left: 260px;
+            
+        }
+        .navWrap .ui.menu{
+                border-radius: 0;
+                border: 0;
+                background:#009999;
+                color:#fff;
+        }
+        .mainWrap{
+            min-height: 100%;
+            position: relative;
+            margin-left: 260px;
+        }
+        .mainContent{
+           
+        }
+         
+         
+         

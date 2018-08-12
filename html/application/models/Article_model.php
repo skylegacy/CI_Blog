@@ -15,7 +15,7 @@ class Article_model extends CI_Model
         
     }
     
-    public function read_Acle_with_Tags($tb_name,$id)
+    public function read_Acle_with_Tags_Cates($tb_name,$id)
     {
     	$this->db->trans_start();
     	
@@ -31,6 +31,11 @@ class Article_model extends CI_Model
         $this->db->where($array);
         $query_2 = $this->db->get();
         
+    	$this->db->select('cateId');
+        $this->db->from('cate_insec_article');
+        $array = array('acleId'=> $id);
+        $this->db->where($array);
+        $query_3 = $this->db->get();
     	
     	$this->db->trans_complete();
     	    if ($this->db->trans_status() === FALSE)
@@ -42,6 +47,7 @@ class Article_model extends CI_Model
 			    $this->db->trans_commit();
 			    $temp_array= $query_1->result_array()[0];
 			    $temp_array['tag_row']=$query_2->result_array();
+			    $temp_array['cate_row']=$query_3->result_array();
 			    
 			    return $temp_array;
 			}
@@ -62,8 +68,11 @@ class Article_model extends CI_Model
 		$this->db->update('article_item', $data);
 		$this->db->where('acleId',$array['id']);
         $this->db->delete('tags_insec_article');
+        $this->db->where('acleId',$array['id']);
+        $this->db->delete('cate_insec_article');
   
        $batchData = array();
+       $batchData_cate = array();
        
        if(!empty($array['tag_row'])){
        	
@@ -74,8 +83,25 @@ class Article_model extends CI_Model
 			    );
 			}
        }
+
+		$multiCate = explode(",",$array['cate_row']);
+		
+		$word = "已成功修改文章";
+		$word.=",insert cateID:".$multiCate[0]."/".$multiCate[1];
+		
+		if(!empty($multiCate)){
+			
+			for($j=0;$j<count($multiCate);$j++){
+				$batchData_cate[]=array(
+			    	'acleId'=>$array['id'],
+			    	'cateId'=>$multiCate[$j]
+			    );
+			}
+		}
+		 
       
       $this->db->insert_batch('tags_insec_article',$batchData);
+      $this->db->insert_batch('cate_insec_article',$batchData_cate);
 	 
 		$this->db->trans_complete();
 
@@ -88,7 +114,8 @@ class Article_model extends CI_Model
 		{
 		    $this->db->trans_commit();
 		    
-		    return '已成功修改文章'.$array['id'];
+		    //return '已成功修改文章'.$array['id'];
+		    return $word;
 		}
     }
     
@@ -100,7 +127,7 @@ class Article_model extends CI_Model
     	    $temprow_1['description']=$array['description'];
     	    
     	    $temprow_2=array();
-    	   
+            
          	$this->db->trans_start();
 			
 		    $this->db->insert('article_item', $temprow_1);
@@ -124,7 +151,32 @@ class Article_model extends CI_Model
 					$sql .=" on duplicate key update ";
 					$sql .="tagId=".$tagId.",acleId=".$acleId;
 					$this->db->query($sql);
-					
+
+				}
+			}
+		 	
+			$multiCate = explode(",",$array['cate_row']);
+		    $temprow_3=array();
+			$word = "已成功修改文章";
+			$word.=",insert cateID:".$multiCate[0]."/".$multiCate[1];
+			
+			if(!empty($multiCate)){
+				
+				for($j=0;$j<count($multiCate);$j++){
+				    $temprow_3[$j]=array(
+				    	'cateId'=>$multiCate[$j],
+						'acleId'=>$insert_id
+				    );
+				}  
+				for($i=0;$i<count($temprow_3);$i++){
+				
+				    $cateId=$temprow_3[$i]['cateId'];
+				    $acleId=$temprow_3[$i]['acleId'];
+					$sql = "insert into cate_insec_article(cateId,acleId) values(".$cateId.",".$acleId.")";
+					$sql .=" on duplicate key update ";
+					$sql .="cateId=".$cateId.",acleId=".$acleId;
+					$this->db->query($sql);
+
 				}
 			}
 			
@@ -137,8 +189,9 @@ class Article_model extends CI_Model
 			}
 			else
 			{
+				
 			    $this->db->trans_commit();
-			    return "文章已成功新增!";
+			    return $word;
 			}
 			
     }
@@ -161,19 +214,34 @@ class Article_model extends CI_Model
     
 	public function readSum_article()
 	{
-		// 	select t1.id,t1.title,t1.description,group_concat(t3.tb_name,t2.tagId),group_concat(t3.name)
+		// 	select t1.id,t1.title,t1.description,group_concat(distinct t3.tb_name,t2.tagId),group_concat(distinct t3.name)
+  //  ,group_concat(distinct t5.tb_name,t4.cateId),group_concat(distinct t5.name)
 		// from article_item t1 
-		// left outer join tags_insec_article t2
-		//   left outer join tags t3
-		//   on t2.tagId = t3.id
-		// on t1.id=t2.acleId
+		// left outer join tags_insec_article t2 on t1.id=t2.acleId
+		//   left outer join tags t3 on t2.tagId = t3.id
+  //          left outer join cate_insec_article t4 on t1.id = t4.acleId
+  //            left outer join cate_tree t5 on t4.cateId = t5.id
 		// group by t1.id
-		$this->db->select('t1.id,group_concat(distinct t1.tb_name,t1.id),t1.title,t1.description,group_concat(t3.tb_name,t2.tagId),group_concat(t3.name)');
+
+		$this->db->select('
+		t1.id,
+		group_concat(distinct t1.tb_name,t1.id),
+		t1.title,
+		t1.description,
+		group_concat(distinct t3.tb_name,t2.tagId),
+		group_concat(distinct t3.name),
+		group_concat(distinct t5.tb_name, t4.cateId),
+		group_concat(distinct t5.name)
+		');
 	    $this->db->from('article_item t1'); 
 	    $this->db->join('tags_insec_article t2', 't1.id=t2.acleId', 'left');
 	    $this->db->join('tags t3', 't2.tagId = t3.id', 'left');
+	    $this->db->join('cate_insec_article t4', 't1.id = t4.acleId', 'left');
+	    $this->db->join('cate_tree t5', 't4.cateId = t5.id', 'left');
 	    $this->db->group_by('t1.id');         
 	    $query = $this->db->get(); 
+	    
+	    
 	    if($query->num_rows() != 0)
 	    {
 	        return $query->result_array();

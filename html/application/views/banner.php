@@ -6,6 +6,7 @@
         <a href="/Article/showList" class="item"><i class="calendar icon"></i>文章列表 </a>
         <a href="/Users/MemberList" class="item"><i class="smile icon"></i> 會員管理 </a>
         <a href="/Tag/tagList" class="item"><i class="block layout icon"></i> 標籤管理 </a>
+        <a href="/Category/cateList" class="item"><i class="block layout icon"></i> 類別管理 </a>
         <a href="/Users/nowOnLine" class="item"><i class="calendar icon"></i>誰在線上 </a>
     </div>
     
@@ -55,22 +56,23 @@
     
     <div class="ui equal width">
         <div class=" top_banner  ">
-            <div class="four wide column">
-            <p>topbanner</p>
+         <!--   <div class="four wide column">-->
+         <!--   <p>topbanner</p>-->
     
-        </div>
-            <div class="four wide column">
-            <p>topbanner</p>
-    
-        </div>
-            <div class="four wide column">
-            <p>topbanner</p>
-    
-        </div>
-            <div class="four wide column">
-            <p>topbanner</p>
-    
-        </div>
+	        <!--</div>-->
+	        <!--<div class="four wide column">-->
+	        <!--    <p>topbanner</p>-->
+	    
+	        <!--</div>-->
+	        <!--<div class="four wide column">-->
+	        <!--    <p>topbanner</p>-->
+	    
+	        <!--</div>-->
+	        <!--<div class="four wide column">-->
+	        <!--    <p>topbanner</p>-->
+	    
+	        <!--</div>-->
+	        
         </div>
         
    

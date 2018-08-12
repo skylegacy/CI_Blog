@@ -35,12 +35,15 @@ class Article extends CI_Controller
         $this->load->view('brdcrub',$data);
     	
     	$predata=$this->article_model->readSum_article();
-    	
+    
 	    for($i=0;$i<count($predata);$i++){
 	     
 	        
-	       $_tagId=explode(',',$predata[$i]['group_concat(t3.tb_name, t2.tagId)']);
-	       $_name=explode(',',$predata[$i] ['group_concat(t3.name)']);
+	       $_tagId=explode(',',$predata[$i]['group_concat(distinct t3.tb_name, t2.tagId)']);
+	       $_name=explode(',',$predata[$i]['group_concat(distinct t3.name)']);
+	       
+	       $_cateId =explode(',',$predata[$i]['group_concat(distinct t5.tb_name, t4.cateId)']);
+	       $_cateName =explode(',',$predata[$i]['group_concat(distinct t5.name)']);
 	       
 	        $data['arti_entries'][$i]['id']=$predata[$i]['id'];
 	    	$data['arti_entries'][$i]['title']=$predata[$i]['title'];
@@ -50,8 +53,6 @@ class Article extends CI_Controller
 	        for($j=0;$j<count($_tagId);$j++){
 	        	
 	        	if(!empty($_tagId[$j])){
-	        		
-	        		$str= $_tagId[$j]."::".$_name[$j]."<br>";
 	        	
 	        		$data['arti_entries'][$i]['tag'][$j]=array(
 	        		   'name'=>$_name[$j],
@@ -60,6 +61,19 @@ class Article extends CI_Controller
 	        	
 	        	}
 	        }
+	        
+	        for($x=0;$x<count($_cateId);$x++){
+	        	
+	        	if(!empty($_cateId[$x])){
+	        	    
+	        	   $data['arti_entries'][$i]['cate'][$x]=array(
+	        		   'name'=>$_cateName[$x],
+	        		   'link'=>$_cateId[$x]
+	        		);
+
+	        	}
+	        }
+	        
 	    }
 
         $this->load->view('art_list',$data);
@@ -91,10 +105,12 @@ class Article extends CI_Controller
     	//update,delete,insert
     	
     	$id = $this->input->post('id');
+    	
     	$sqlData = array(
             'title' => $this->input->post('art_title'),
             'description' => $this->input->post('art_inner'),
             'tag_row' => $this->input->post('tagname_row'),
+            'cate_row'=> $this->input->post('cate_row'),
             'id' => $this->input->post('id')
         );
         
@@ -142,14 +158,18 @@ class Article extends CI_Controller
             //$matches[1]  資料表名欄
             //$matches[2]   資料表id欄
          
-            $data['sql_result']['val_result']= $this->article_model->read_Acle_with_Tags($matches[1],$matches[2]);
+            $data['sql_result']['val_result']= $this->article_model->read_Acle_with_Tags_Cates($matches[1],$matches[2]);
             $data['sql_result']['chebox_result']=$this->article_model->readSum_tags();
        }
         
         $data['subPath']=base_url().'Article/UpdateItem';
         $data['formPath']='Article/UpdateItem';
-        
-        
+        $rebuild=$data['sql_result']['val_result']['cate_row'];
+        $newStr=array();
+        for($j=0;$j<count($rebuild);$j++){
+        	$newStr[]=$rebuild[$j]['cateId'];
+        }
+        $data['selectDefault'] = implode(",", $newStr);
         $this->parser->parse('art_edit', $data);
        $this->load->view('foot');
     }
@@ -160,6 +180,7 @@ class Article extends CI_Controller
             'title' => $this->input->post('art_title'),
             'description' => htmlspecialchars_decode($this->input->post('art_inner')),
             'tag_row' => $this->input->post('tagname_row'),
+            'cate_row'=> $this->input->post('cate_row')
             
         );
         $status = '新增成功';

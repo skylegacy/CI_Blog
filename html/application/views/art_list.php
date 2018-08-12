@@ -29,21 +29,39 @@
 					      <div class="description">
 					        <p>{$arti_entries[$i]['description']}</p>
 					      </div>
-					      <div class="extra">
+					      <br>
+					      <div class="extra">分類:
+EOD;
+		                    for($t=0;$t<count($arti_entries[$i]['cate']);$t++){
+		                    	
+		                    	$htmlstring.=<<<EOD
+		                    	
+		                    	<a href="{$arti_entries[$i]['cate'][$t]['link']}" class="ui label">
+		                    	<i class="check icon"></i>
+		                    	   {$arti_entries[$i]['cate'][$t]['name']}
+		                    	</a>
+EOD;
+		                    }
+
+					 $htmlstring .=<<<EOD
+					  
+					  </div>
+					      <div class="extra">tags:
 					        <a class="ui right floated primary button" href="Update/{$arti_entries[$i]['edit']}" >
 					          編輯<i class="right chevron icon"></i>
 					        </a>
 					        <a data-modal="{$arti_entries[$i]['edit']}" class="ui right floated act_modal button">
 					          刪除<i class="right chevron icon"></i>
 					        </a>
+
 EOD;
-					 
 							 for($j=0;$j<count($arti_entries[$i]['tag']);$j++){
 							 
 							 	$htmlstring.=<<<EOD
 							 
-							 <a href="{$arti_entries[$i]['tag'][$j]['link']}" class="ui label">
-							     <i class="globe icon"></i>{$arti_entries[$i]['tag'][$j]['name']}
+							 <a href="{$arti_entries[$i]['tag'][$j]['link']}" class="ui tag label"
+							 style="margin:0 0 0 15px">
+							     {$arti_entries[$i]['tag'][$j]['name']}
 							 </a>
 EOD;
 							 }

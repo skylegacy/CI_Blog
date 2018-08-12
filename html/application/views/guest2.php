@@ -103,9 +103,7 @@
     //console.log(baseCoverter(443,2));
     // console.log(baseCoverter(100345,8));
     // console.log(baseCoverter(100345,16));
-    
-    
-    
+
     var queue1 = new Queue();
     queue1.enqueue("sky");
     queue1.enqueue("angleina");
@@ -114,12 +112,49 @@
     queue1.enqueue("hanna tong");
     //queue1.print();
     
-    
-    
-    
-    
 </script>
-<h1>Guest Page2</h1>
+
+<h1>SPL- Standard PHP Library </h1>
+<?php
+
+ $objList= new SplDoublyLinkedList();
+ $objList->push(7);
+ $objList->push(13);
+ $objList->push(17);
+ $objList->unshift(10);
+ 
+ $objList->rewind();
+ 
+  $objList->next();
+  $objList->next();
+  $objList->next();
+  //$objList->pop();
+  //$objList->shift();
+ echo "current:".$objList->current()."<br>";
+ 
+ echo "<pre>";
+ print_r($objList);
+ echo "</pre>";
+ 
+ 
+ $objStack = new SplStack();
+ $objStack->push('a');
+ $objStack->push('b');
+ $objStack->push('c');
+ 
+ echo "<pre>";
+ print_r($objStack);
+ echo "</pre>";
+ 
+ echo "Bottom:".$objStack->bottom()."<br>";
+ $objStack->offsetSet(0,'C');
+ 
+ echo "<pre>";
+ print_r($objStack);
+ echo "</pre>";
+ 
+?>
+
 <p><?php echo $baselocate ?></p>
  
  

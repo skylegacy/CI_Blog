@@ -18,7 +18,7 @@ class Guest extends CI_Controller
         $this->CI->config->item('base_url');
     }
 
-    public function func1()
+    public function index()
     {
         $data['baselocate']=trim(APPPATH,'\\');
         //$this->load->view('header');
@@ -27,7 +27,7 @@ class Guest extends CI_Controller
         $this->load->view('foot');
     }
 
-    public function func2()
+    public function demo()
     {
         $data['baselocate']=trim(APPPATH,'\\');
         //$this->load->view('header');

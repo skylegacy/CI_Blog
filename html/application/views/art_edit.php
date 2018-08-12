@@ -25,6 +25,26 @@
 			    <textarea name="art_inner" style="width:450px;align-align:left;"><?php echo $sql_result['val_result']['description']; ?></textarea>
 			  </div>
 		  </div>
+		  <div class="inline fields">
+		  
+		    <label style="width:120px;font-size:16px">文章類別</label>
+		    <div class="field" style="width:450px;">
+		       
+		       <fieldset id="multiSelect"><legend>任選一或多個類別</legend>
+	 
+					<div class="ui multiple selection dropdown">
+					  <!-- This will receive comma separated value like OH,TX,WY !-->
+					  <input name="cate_row" type="hidden" value="<?php echo $selectDefault; ?>">
+					  <i class="dropdown icon"></i>
+					  <div class="default text">States</div>
+					  <div id="ajaxData_in" class="menu">
+					     
+					  </div>
+					</div>
+					
+		        </fieldset>
+		     </div>
+		  </div>
 		  
 		  <div class="inline fields">
 		  	
@@ -115,7 +135,7 @@ EOD;
           $.post("/{$formPath}",$("#article_form").serialize(),
               function(data){
                   var status = data.status;
-                  
+                  console.log($("#article_form").serialize());
                   if(data.pass==true){
                       $("#Hint").removeClass("negative");
                       $("#Hint").addClass("success ");
@@ -143,6 +163,80 @@ EOD;
      echo $js_string;
    
 ?>
+  <script>
   
+		 	
+	
+	        function recurParent(data, $e,dataArr){
+				
+				function createInner(childData,$target){
+					
+				    var opt = $('<div class="item">');
+				    var texstr='';
+				    if (childData.nodes != undefined && childData.nodes.length > 0) {
+				            
+				            for (var i = 0; i < childData.nodes.length; i++) {
+				                var child = childData.nodes[i];
+				                createInner(child, $target);
+				            };
+				            
+			        }else{
+			        	//texstr+='__';
+			        }
+			        if (childData.name != 'root'){
+			    	     //texstr+='__';
+			    		 opt.text(texstr+childData.name);
+			    		 dataArr.push({id:childData.id,name:childData.name});
+			    		 opt.attr("data-value",childData.id);
+			    		 opt.appendTo($target);
+			    	} 
+			        
+				 }
+			     for(var key in data){
+			     	createInner(data[key],$e);
+			     }
+			}
+			
+		    var optionDataRow=[];
+		    
+		 //   $.when($.get("/Category/ajax_RebuildTree")).done(function(data,status){
+		    	
+			//     jsonTree= JSON.parse(data);
+			// 	recurParent(jsonTree,$('#multiSelect select'),optionDataRow);
+			// 	$('.multiple.ui.dropdown').dropdown();
+				
+			// }).then(function (data) {
+				
+			//     $('.multiple .menu .item').each(function(i,ele){
+			// 	 //var name=$(this).data('value');
+			//         $(ele).attr('data-id',optionDataRow[i].id);
+			//     });
+			 
+			// });
+			
+			  $.when($.get("/Category/ajax_RebuildTree")).done(function(data,status){
+		    	
+			    jsonTree= JSON.parse(data);
+				recurParent(jsonTree,$('#ajaxData_in'),optionDataRow);
+				$('.ui.multiple.selection').dropdown();
+				
+			}).then(function (data) {
+				
+			    $('.menu .item').each(function(i,ele){
+			    	
+			       //console.log(optionDataRow[i]);
+				   //var name=$(this).data('value');
+			        //$(ele).attr('data-id',optionDataRow[i].id);
+			    });
+			 
+			});
+			 
+			
+			
+			
+			
+			
+			
+ </script>
 </div>
  

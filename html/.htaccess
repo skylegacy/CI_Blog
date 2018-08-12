@@ -1,0 +1,19 @@
+
+# order deny,allow
+# DirectoryIndex  index.php
+
+
+#<IfModule mod_rewrite.c>
+
+	
+
+    RewriteEngine on
+    
+    RewriteCond $1 !^(index\.php|images|swf|uploads|js|css|assets|robots\.txt|$)
+    RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RedirectMatch ^/$ http://61.58.100.163/Guest/demo 
+    RewriteRule ^(.*)$  index.php/$1 [L,QSA]
+    
+ 
+#</IfModule>
